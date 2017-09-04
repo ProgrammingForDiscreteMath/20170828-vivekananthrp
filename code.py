@@ -1,4 +1,5 @@
-from math import sqrt
+from math import sqrt, pi, atan, sin, cos, log
+
 class ComplexNumber:
     """
     The class of complex numbers.
@@ -35,6 +36,17 @@ class ComplexNumber:
         Return the sum of ``self`` and ``other``.
         """
         return ComplexNumber(self.real + other.real, self.imaginary + other.imaginary)
+    def product(self, other):
+        """
+        Return the product of the ``self`` and the ``other``.
+        """
+        return ComplexNumber((self.real * other.real - self.imaginary * other.imaginary), (self.real * other.imaginary + self.imaginary * other.real))
+    def complex_conjucate(self):
+        """
+        Replace in-place ``self`` with its complex conjucate.
+        """
+        self.imaginary = -1 * self.imaginary
+
 
 class NonZeroComplexNumber(ComplexNumber):
     def __init__(self, real_part, imaginary_part):
@@ -50,3 +62,33 @@ class NonZeroComplexNumber(ComplexNumber):
         """
         den = self.real**2 + self.imaginary**2
         return NonZeroComplexNumber(self.real/den, -self.imaginary/den)
+    def polar_coordinates(self):
+        """
+        Return the polar coordinate of the ``self``.
+        """
+        if self.real == 0:
+            theta = pi/2
+        else:
+            theta = atan(float(self.imaginary)/float(self.real))
+        r = sqrt(self.real**2 + self.imaginary**2)
+        return (r, theta)
+    def logarithm(self):
+        """
+        Return the logarithm of the complex number.
+        """
+        r , theta = self.polar_coordinates()
+        return NonZeroComplexNumber(log(r), theta)
+
+
+#TEST product method of class ComplexNumber
+c = ComplexNumber(2,3)
+print (c.product(ComplexNumber(1,2)) == ComplexNumber(-4,7))
+
+#TEST complex_conjucate method of class ComplexNumber
+c.complex_conjucate()
+print (c == ComplexNumber(2, -3))
+
+#TEST logarith method of class NonZeroComplexNumber 
+n = NonZeroComplexNumber(3,4)
+print (n.logarithm() == ComplexNumber(1.6094379124341003, 0.9272952180016122))
+
